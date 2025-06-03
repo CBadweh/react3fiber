@@ -1,10 +1,21 @@
-import {Canvas} from '@react-three/fiber'
+import {Canvas, useFrame} from '@react-three/fiber'
 import './App.css'
-
+import {useRef} from 'react'
 
 const Cube = ({position, size, color}) => {
+
+  // Animation 
+  const ref = useRef()
+  useFrame((state, delta) => {
+    ref.current.rotation.x += delta 
+    ref.current.position.z = Math.sin(state.clock.elapsedTime) * 2
+  
+  })
+
+
+  //  Box Geometry 
   return (
-    <mesh position = {position} >
+    <mesh position = {position} ref= {ref}>
         <boxGeometry args={size} />
         <meshStandardMaterial color={color} />
     </mesh>
