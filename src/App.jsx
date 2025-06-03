@@ -1,39 +1,45 @@
-import {Canvas, useFrame} from '@react-three/fiber'
-import './App.css'
-import {useRef} from 'react'
+import { useState, useRef } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
+// import './App.css'  // Assuming you have some styles in App.css
 
-const Cube = ({position, size, color}) => {
+const Cube = ({ running }) => {
+  // Cube Component   
+  const ref = useRef()  // To update box position
+  const timerRef = useRef(0) // For pause/resume functionality
 
-  // Animation 
-  const ref = useRef()
   useFrame((state, delta) => {
-    ref.current.rotation.x += delta 
-    ref.current.position.z = Math.sin(state.clock.elapsedTime) * 2
-  
-  })
+    if (!running) return;  // Skip animation if not running  
+    timerRef.current += delta;  // Advance custom timer only when running  
+    ref.current.position.x = Math.sin(timerRef.current) * 2; // Use custom timer instead of elapsedTime to avoid jump on resume
+  });
+    
 
-
-  //  Box Geometry 
   return (
-    <mesh position = {position} ref= {ref}>
-        <boxGeometry args={size} />
-        <meshStandardMaterial color={color} />
-    </mesh>
-
-  )
-}
-
+      <mesh position = {[0,0, 0]} ref={ref}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="orange" />
+      </mesh>
+    )
+  }
 
 const App = () => {
+  // Button State for Start/Pause Animation
+  const [running, setRunning] = useState(false)
+
   return (
-    <Canvas>
-      <directionalLight position = {[0, 0, 2]} />
-      <ambientLight intensity={0.1} />
+    <>
+      {/* Render Start/Pause Button */}
+      <button onClick={() => setRunning(!running)}>
+        {running ? 'Pause' : 'Start'} Animation
+      </button>
 
-      {/*  User define component <Cube/> with its props: position, color, and size to pass to the components */}
-      <Cube position={[1,0, 0]} color = {"green"} size={[1, 1, 1]} />     
-
-    </Canvas>
+      {/* // r3f Canvas for animation */}
+      <Canvas>
+        <directionalLight position={[0, 0, 2]} />
+        <ambientLight intensity={0.1} />
+        <Cube running={running} />
+      </Canvas>
+    </>
   )
 }
 
