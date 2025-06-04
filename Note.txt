@@ -26,3 +26,22 @@ Following The lesson
         timerRef = useRef(0)
             when we pause the simulation, we also need to pause time to prevent jerk in the animation
             we accomplish this by using timerRef. If simulation is not running, don't increase time
+
+
+4. Testing Passing info and Graphing using chartjs
+    Passing info 
+        Props are always passed from parent -> child
+            if a function is passed as a prop, the child can call that function and send data ack to the parents
+        ex: <Cube running={running} onUpdate={handleUpdate} />
+            when the the child, Cube, call handleUpdate in useFrame(), it passes time and value to the parents
+            sampleInterval control how many data to send back to the parents
+            handleUpdate() save all the data from the Cubed and then pass it to PositionChart component to graph
+    using chart js
+        add tooltip for readin data point 
+        initialize graph windows to 30 second
+
+
+5. Add Inputs for speed
+
+
+6. Add input for initial condition

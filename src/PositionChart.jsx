@@ -37,7 +37,7 @@ const PositionChart = ({ data }) => {
         fill: false,                       // No fill under line
         tension: 0.3,                      // Smooth curve tension (0 = straight)
         showLine: true,                    // Show connecting line
-        pointRadius: 3,                    // Radius of points
+        pointRadius: 2,                    // Radius of points
         pointHoverRadius: 6,               // Hover radius of points
       },
     ],

@@ -1,29 +1,42 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect  } from "react";
 import { useFrame } from "@react-three/fiber";
 
-const Cube = ({ running, onUpdate }) => {
-  const ref = useRef();                // Reference to the mesh for updating position
-  const timerRef = useRef(0);          // Internal timer tracking elapsed animation time
-  const lastSampleTimeRef = useRef(0); // Last time we sent an update to parent
-  const sampleInterval = 0.1;          // Minimum time interval (seconds) between updates
+const Cube = ({ running, onUpdate, velocity, initialPosition   }) => {
 
-  useFrame((state, delta) => {
-    if (!running) return;              // Skip animation if paused
+    const ref = useRef();                // Reference to the mesh for updating position
+    const positionRef = useRef(initialPosition); // Current x position
+    const animationTimeRef = useRef(0);
 
-    timerRef.current += delta;         // Increment timer by frame time delta
-    const x = Math.sin(timerRef.current) * 2; // Calculate new x-position (smooth oscillation)
-    ref.current.position.x = x;        // Update cube position
+    // This will be used to track the last time we sent an update to the parent component
+    const lastSampleTimeRef = useRef(0); // Last time we sent an update to parent
+    const sampleInterval = 0.1;          // Minimum time interval (seconds) between updates
 
-    // Send data to parent only if sampleInterval seconds passed since last update
-    if (timerRef.current - lastSampleTimeRef.current >= sampleInterval) {
-      lastSampleTimeRef.current = timerRef.current; // Update last sample time
-      onUpdate(timerRef.current, x);                  // Call parent's update function
+      // Reset position when initialPosition changes (optional)
+    useEffect(() => {
+        positionRef.current = initialPosition;
+        if (ref.current) {
+        ref.current.position.x = initialPosition;
+        }
+    }, [initialPosition]);
+
+    
+    useFrame((state, delta) => {
+    if (!running) return;
+
+    animationTimeRef.current += delta; // increment only while running
+    positionRef.current += velocity * delta; // Update position based on velocity and delta time dX = v*dt
+    ref.current.position.x = positionRef.current;
+
+    if (animationTimeRef.current - lastSampleTimeRef.current >= sampleInterval) {
+        lastSampleTimeRef.current = animationTimeRef.current;
+        onUpdate(animationTimeRef.current, positionRef.current);
     }
-  });
+    });
+
 
   return (
     <mesh position={[0, 0, 0]} ref={ref}>
-      <boxGeometry args={[1, 1, 1]} />
+      <boxGeometry args={[1, 6, 1]} />
       <meshStandardMaterial color="orange" />
     </mesh>
   );
