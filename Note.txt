@@ -1,0 +1,28 @@
+Run the program
+r3f_PhysicSim $ npm run dev
+
+
+Following The lesson
+1.  Create a Cube
+    Understand
+        Canvas
+            Lighting
+            boxMesh
+                Component + Props for the box position, size, and color
+
+2.  Animation
+    Understand
+        useFrame(state, delta) hook allow us to run callback function on every frame
+            state - contain the properties of current scene eg clock, camera
+            delta - time in sec since the last frame
+        useRef() // have access to mesh properties
+
+3.  Testing: Pause/Resume the animation using <button> component and useState(). Not using Lava
+    Understand
+        custom React Component <button>
+            button update UI on "Pause Animation" or "Start Animation"
+        useState() - trigger by <button> to pause/resume animation in useFrame()
+        
+        timerRef = useRef(0)
+            when we pause the simulation, we also need to pause time to prevent jerk in the animation
+            we accomplish this by using timerRef. If simulation is not running, don't increase time
